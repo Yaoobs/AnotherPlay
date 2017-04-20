@@ -1,8 +1,11 @@
-package com.yaoobs.anotherplay;
+package com.yaoobs.anotherplay.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.yaoobs.anotherplay.R;
+import com.yaoobs.anotherplay.ui.adapter.ViewPagerAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
     NavigationView mNavigationView;
     @BindView(R.id.tool_bar)
     Toolbar mToolBar;
+    @BindView(R.id.tab_layout)
+    TabLayout mTabLayout;
+    @BindView(R.id.view_pager)
+    ViewPager mViewPager;
 
 
     private View headerView;
@@ -31,6 +41,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        initDrawerLayout();
+        initTablayout();
+    }
+
+    private void initTablayout() {
+        PagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(adapter);
+
+        mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    private void initDrawerLayout() {
         headerView = mNavigationView.getHeaderView(0);
 
         headerView.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         mToolBar.inflateMenu(R.menu.toolbar_menu);
 
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,mToolBar,R.string.open,R.string.close);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.open, R.string.close);
 
         drawerToggle.syncState();
 
