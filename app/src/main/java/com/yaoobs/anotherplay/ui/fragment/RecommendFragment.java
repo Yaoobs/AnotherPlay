@@ -1,5 +1,6 @@
 package com.yaoobs.anotherplay.ui.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,12 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.yaoobs.anotherplay.R;
 import com.yaoobs.anotherplay.bean.AppInfo;
 import com.yaoobs.anotherplay.bean.PageBean;
 import com.yaoobs.anotherplay.http.ApiService;
 import com.yaoobs.anotherplay.http.HttpManager;
+import com.yaoobs.anotherplay.presenter.RecommendPresenter;
+import com.yaoobs.anotherplay.presenter.contract.RecommendContract;
 import com.yaoobs.anotherplay.ui.adapter.RecomendAppAdatper;
 import com.yaoobs.anotherplay.ui.decoration.DividerItemDecoration;
 
@@ -30,20 +34,22 @@ import retrofit2.Response;
  * Created by Ivan on 16/9/26.
  */
 
-public class RecommendFragment extends Fragment {
+public class RecommendFragment extends Fragment implements RecommendContract.View{
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
     private RecomendAppAdatper mAdatper;
 
-
-    @Override
+    private ProgressDialog mProgressDialog;
+    private RecommendContract.Presenter mPresenter;
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
         View view = inflater.inflate(R.layout.fragment_recomend, container, false);
 
         ButterKnife.bind(this, view);
+        mProgressDialog = new ProgressDialog(getActivity());
+        mPresenter = new RecommendPresenter(this);
         initData();
         return view;
 
@@ -51,26 +57,10 @@ public class RecommendFragment extends Fragment {
 
     private void initData(){
 
-        HttpManager manager = new HttpManager();
-
-        ApiService apiService = manager.getRetrofit(manager.getOkHttpClient()).create(ApiService.class);
-
-        apiService.getApps("{'page':0}").enqueue(new Callback<PageBean<AppInfo>>() {
-            @Override
-            public void onResponse(Call<PageBean<AppInfo>> call, Response<PageBean<AppInfo>> response) {
-                PageBean<AppInfo> pageBean = response.body();
-                List<AppInfo> datas = pageBean.getDatas();
-                initRecycleView(datas);
-            }
-
-            @Override
-            public void onFailure(Call<PageBean<AppInfo>> call, Throwable t) {
-
-            }
-        });
+        mPresenter.requestDatas();
     }
 
-    private void initRecycleView(List<AppInfo> datas){
+    private void initRecyclerView(List<AppInfo> datas){
 
         //为RecyclerView设置布局管理器
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -87,5 +77,32 @@ public class RecommendFragment extends Fragment {
 
 
 
+    }
+
+    @Override
+    public void shwLoading() {
+        mProgressDialog.show();
+    }
+
+    @Override
+    public void dismissLoading() {
+        if(mProgressDialog.isShowing()){
+            mProgressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void showResult(List<AppInfo> datas) {
+        initRecyclerView(datas);
+    }
+
+    @Override
+    public void showNodata() {
+        Toast.makeText(getActivity(),"暂时无数据，请吃完饭再来",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showError(String msg) {
+        Toast.makeText(getActivity(),"服务器开小差了："+msg,Toast.LENGTH_LONG).show();
     }
 }
