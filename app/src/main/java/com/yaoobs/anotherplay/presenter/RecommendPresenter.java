@@ -7,6 +7,8 @@ import com.yaoobs.anotherplay.bean.PageBean;
 import com.yaoobs.anotherplay.data.RecommendModel;
 import com.yaoobs.anotherplay.presenter.contract.RecommendContract;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,9 +23,10 @@ public class RecommendPresenter implements RecommendContract.Presenter{
 
     private RecommendContract.View mView;
 
-    public RecommendPresenter(RecommendContract.View view){
+//    @Inject
+    public RecommendPresenter( RecommendContract.View view,RecommendModel model){
         this.mView = view;
-        mModel = new RecommendModel();
+        mModel = model;
     }
 
 

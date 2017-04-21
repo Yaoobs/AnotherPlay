@@ -14,21 +14,18 @@ import android.widget.Toast;
 
 import com.yaoobs.anotherplay.R;
 import com.yaoobs.anotherplay.bean.AppInfo;
-import com.yaoobs.anotherplay.bean.PageBean;
-import com.yaoobs.anotherplay.http.ApiService;
-import com.yaoobs.anotherplay.http.HttpManager;
-import com.yaoobs.anotherplay.presenter.RecommendPresenter;
+import com.yaoobs.anotherplay.di.DaggerRecommendComponent;
+import com.yaoobs.anotherplay.di.RecommendModule;
 import com.yaoobs.anotherplay.presenter.contract.RecommendContract;
-import com.yaoobs.anotherplay.ui.adapter.RecomendAppAdatper;
+import com.yaoobs.anotherplay.ui.adapter.RecommendAppAdatper;
 import com.yaoobs.anotherplay.ui.decoration.DividerItemDecoration;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Ivan on 16/9/26.
@@ -38,20 +35,32 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
-    private RecomendAppAdatper mAdatper;
+    private RecommendAppAdatper mAdatper;
 
-    private ProgressDialog mProgressDialog;
-    private RecommendContract.Presenter mPresenter;
+    @Inject
+    ProgressDialog mProgressDialog;
+    @Inject
+    RecommendContract.Presenter mPresenter;
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
         View view = inflater.inflate(R.layout.fragment_recomend, container, false);
 
         ButterKnife.bind(this, view);
-        mProgressDialog = new ProgressDialog(getActivity());
-        mPresenter = new RecommendPresenter(this);
+//        mProgressDialog = new ProgressDialog(getActivity());
+//        mPresenter = new RecommendPresenter(this);
+//        DaggerRecommendComponent.builder()
+//                .remmendModule(new RecommendModule()).build().inject(this);
+        DaggerRecommendComponent.builder()
+                .recommendModule(new RecommendModule(this)).build().inject(this);
         initData();
         return view;
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
     }
 
@@ -71,7 +80,7 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
         //动画
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdatper = new RecomendAppAdatper(getActivity(),datas);
+        mAdatper = new RecommendAppAdatper(getActivity(),datas);
 
         mRecyclerView.setAdapter(mAdatper);
 
