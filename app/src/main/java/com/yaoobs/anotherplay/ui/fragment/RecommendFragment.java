@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.yaoobs.anotherplay.AppApplication;
 import com.yaoobs.anotherplay.R;
 import com.yaoobs.anotherplay.bean.AppInfo;
-import com.yaoobs.anotherplay.di.DaggerRecommendComponent;
-import com.yaoobs.anotherplay.di.RecommendModule;
+
+import com.yaoobs.anotherplay.di.component.DaggerRecommendComponent;
+import com.yaoobs.anotherplay.di.module.RecommendModule;
 import com.yaoobs.anotherplay.presenter.contract.RecommendContract;
 import com.yaoobs.anotherplay.ui.adapter.RecommendAppAdatper;
 import com.yaoobs.anotherplay.ui.decoration.DividerItemDecoration;
@@ -31,7 +33,7 @@ import butterknife.ButterKnife;
  * Created by Ivan on 16/9/26.
  */
 
-public class RecommendFragment extends Fragment implements RecommendContract.View{
+public class RecommendFragment extends Fragment implements RecommendContract.View {
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -41,6 +43,7 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
     ProgressDialog mProgressDialog;
     @Inject
     RecommendContract.Presenter mPresenter;
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
@@ -49,9 +52,9 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
         ButterKnife.bind(this, view);
 //        mProgressDialog = new ProgressDialog(getActivity());
 //        mPresenter = new RecommendPresenter(this);
-//        DaggerRecommendComponent.builder()
-//                .remmendModule(new RecommendModule()).build().inject(this);
-        DaggerRecommendComponent.builder()
+
+
+        DaggerRecommendComponent.builder().appComponent(((AppApplication) getActivity().getApplication()).getAppComponent())
                 .recommendModule(new RecommendModule(this)).build().inject(this);
         initData();
         return view;
@@ -64,12 +67,12 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
 
     }
 
-    private void initData(){
+    private void initData() {
 
         mPresenter.requestDatas();
     }
 
-    private void initRecyclerView(List<AppInfo> datas){
+    private void initRecyclerView(List<AppInfo> datas) {
 
         //为RecyclerView设置布局管理器
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -80,10 +83,9 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
         //动画
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdatper = new RecommendAppAdatper(getActivity(),datas);
+        mAdatper = new RecommendAppAdatper(getActivity(), datas);
 
         mRecyclerView.setAdapter(mAdatper);
-
 
 
     }
@@ -95,7 +97,7 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
 
     @Override
     public void dismissLoading() {
-        if(mProgressDialog.isShowing()){
+        if (mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
     }
@@ -107,11 +109,11 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
 
     @Override
     public void showNodata() {
-        Toast.makeText(getActivity(),"暂时无数据，请吃完饭再来",Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "暂时无数据，请吃完饭再来", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showError(String msg) {
-        Toast.makeText(getActivity(),"服务器开小差了："+msg,Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "服务器开小差了：" + msg, Toast.LENGTH_LONG).show();
     }
 }

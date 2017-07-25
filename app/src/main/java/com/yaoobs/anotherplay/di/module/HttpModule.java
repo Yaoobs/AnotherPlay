@@ -1,7 +1,13 @@
-package com.yaoobs.anotherplay.http;
+package com.yaoobs.anotherplay.di.module;
+
+import com.yaoobs.anotherplay.data.http.ApiService;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -9,12 +15,14 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by Ivan on 2016/12/30.
+ * Created by yaoobs on 2017/7/25.
  */
 
-public class HttpManager {
+@Module
+public class HttpModule {
 
-
+    @Provides
+    @Singleton
     public OkHttpClient getOkHttpClient(){
 
 
@@ -42,8 +50,9 @@ public class HttpManager {
 
     }
 
-
-    public Retrofit getRetrofit(OkHttpClient okHttpClient){
+    @Provides
+    @Singleton
+    public Retrofit provideRetrofit(OkHttpClient okHttpClient){
 
 
         Retrofit.Builder builder = new Retrofit.Builder()
@@ -56,4 +65,11 @@ public class HttpManager {
         return builder.build();
 
     }
+
+    @Provides
+    @Singleton
+    public ApiService provideApiService(Retrofit retrofit){
+        return retrofit.create(ApiService.class);
+    }
+
 }

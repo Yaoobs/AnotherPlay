@@ -1,4 +1,4 @@
-package com.yaoobs.anotherplay.http;
+package com.yaoobs.anotherplay.data.http;
 
 
 import com.yaoobs.anotherplay.bean.AppInfo;
