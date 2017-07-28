@@ -7,6 +7,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import com.eftimoff.androipathview.PathView;
 import com.yaoobs.anotherplay.R;
+import com.yaoobs.anotherplay.common.Constant;
+import com.yaoobs.anotherplay.common.util.ACache;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,16 +51,16 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
 
-//       String isShowGuide =  ACache.get(this).getAsString(Constant.IS_SHOW_GUIDE);
-//
-//        // 第一次启动进入引导页面
-//        if(null == isShowGuide){
-//            startActivity(new Intent(this,GuideActivity.class));
-//
-//        }
-//        else{
+       String isShowGuide =  ACache.get(this).getAsString(Constant.IS_SHOW_GUIDE);
+
+        // 第一次启动进入引导页面
+        if(null == isShowGuide){
+            startActivity(new Intent(this,GuideActivity.class));
+
+        }
+        else{
             startActivity(new Intent(this,MainActivity.class));
-//        }
+        }
 
 
         this.finish();
