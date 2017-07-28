@@ -6,6 +6,7 @@ import com.yaoobs.anotherplay.bean.PageBean;
 import com.yaoobs.anotherplay.data.http.ApiService;
 
 import retrofit2.Callback;
+import rx.Observable;
 
 
 public class RecommendModel {
@@ -16,13 +17,14 @@ public class RecommendModel {
         this.mApiService = apiService;
     }
 
-    public  void getApps(Callback<PageBean<AppInfo>> callback){
+    public Observable<PageBean<AppInfo>> getApps(){
 //        HttpManager manager = new HttpManager();
 //
 //        ApiService apiService = manager.getRetrofit(manager.getOkHttpClient()).create(ApiService.class);
 
-        mApiService.getApps("{'page':0}").enqueue(callback);
+//        mApiService.getApps("{'page':0}").enqueue(callback);
 
+        return mApiService.getApps("{'page':0}");
     }
 
 

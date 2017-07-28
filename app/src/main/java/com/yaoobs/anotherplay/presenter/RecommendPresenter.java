@@ -1,7 +1,6 @@
 package com.yaoobs.anotherplay.presenter;
 
 
-
 import com.yaoobs.anotherplay.bean.AppInfo;
 import com.yaoobs.anotherplay.bean.PageBean;
 import com.yaoobs.anotherplay.data.RecommendModel;
@@ -13,9 +12,14 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Scheduler;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.observers.SafeSubscriber;
+import rx.schedulers.Schedulers;
 
 
-public class RecommendPresenter extends BasePresenter<RecommendModel,RecommendContract.View>{
+public class RecommendPresenter extends BasePresenter<RecommendModel, RecommendContract.View> {
 
     @Inject
     public RecommendPresenter(RecommendModel recommendModel, RecommendContract.View view) {
@@ -23,27 +27,58 @@ public class RecommendPresenter extends BasePresenter<RecommendModel,RecommendCo
     }
 
     public void requestDatas() {
-        mView.shwLoading();
 
-        mModel.getApps(new Callback<PageBean<AppInfo>>() {
+        mModel.getApps()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<PageBean<AppInfo>>() {
+
             @Override
-            public void onResponse(Call<PageBean<AppInfo>> call, Response<PageBean<AppInfo>> response) {
-                if(response !=null){
+            public void onStart() {
+                mView.shwLoading();
+            }
 
-                    mView.showResult(response.body().getDatas());
-                }
-                else{
+            @Override
+            public void onCompleted() {
+
+                mView.dismissLoading();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mView.dismissLoading();
+            }
+
+            @Override
+            public void onNext(PageBean<AppInfo> response) {
+                if (response != null) {
+                    mView.showResult(response.getDatas());
+                } else {
                     mView.showNodata();
                 }
-
-                mView.dismissLoading();
-            }
-
-            @Override
-            public void onFailure(Call<PageBean<AppInfo>> call, Throwable t) {
-                mView.dismissLoading();
-                mView.showError(t.getMessage());
             }
         });
+//        mView.shwLoading();
+
+//        mModel.getApps(new Callback<PageBean<AppInfo>>() {
+//            @Override
+//            public void onResponse(Call<PageBean<AppInfo>> call, Response<PageBean<AppInfo>> response) {
+//                if(response !=null){
+//
+//                    mView.showResult(response.body().getDatas());
+//                }
+//                else{
+//                    mView.showNodata();
+//                }
+//
+//                mView.dismissLoading();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<PageBean<AppInfo>> call, Throwable t) {
+//                mView.dismissLoading();
+//                mView.showError(t.getMessage());
+//            }
+//        });
     }
 }
