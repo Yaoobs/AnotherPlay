@@ -10,11 +10,6 @@ import android.view.ViewGroup;
 
 import com.yaoobs.anotherplay.R;
 
-
-/**
- * Created by Ivan on 16/9/26.
- */
-
 public class RankingFragment extends Fragment {
 
 

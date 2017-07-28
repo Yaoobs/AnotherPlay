@@ -14,9 +14,6 @@ import com.yaoobs.anotherplay.ui.fragment.RecommendFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Ivan on 2016/12/8.
- */
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 

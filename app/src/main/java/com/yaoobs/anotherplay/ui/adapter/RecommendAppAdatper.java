@@ -18,10 +18,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Ivan on 2016/12/30.
- */
-
 public class RecommendAppAdatper extends RecyclerView.Adapter<RecommendAppAdatper.ViewHolder> {
     private Context mContext;
     private List<AppInfo> mDatas;

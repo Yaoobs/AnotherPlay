@@ -5,6 +5,7 @@ package com.yaoobs.anotherplay.presenter;
 import com.yaoobs.anotherplay.bean.AppInfo;
 import com.yaoobs.anotherplay.bean.PageBean;
 import com.yaoobs.anotherplay.data.RecommendModel;
+import com.yaoobs.anotherplay.di.module.RecommendModule;
 import com.yaoobs.anotherplay.presenter.contract.RecommendContract;
 
 import javax.inject.Inject;
@@ -13,25 +14,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by Ivan on 2017/1/3.
- */
 
-public class RecommendPresenter implements RecommendContract.Presenter{
+public class RecommendPresenter extends BasePresenter<RecommendModel,RecommendContract.View>{
 
-    private RecommendModel mModel;
-
-    private RecommendContract.View mView;
-
-//    @Inject
-    public RecommendPresenter( RecommendContract.View view,RecommendModel model){
-        this.mView = view;
-        mModel = model;
+    @Inject
+    public RecommendPresenter(RecommendModel recommendModel, RecommendContract.View view) {
+        super(recommendModel, view);
     }
 
-
-    @Override
     public void requestDatas() {
+        mView.shwLoading();
+
         mModel.getApps(new Callback<PageBean<AppInfo>>() {
             @Override
             public void onResponse(Call<PageBean<AppInfo>> call, Response<PageBean<AppInfo>> response) {
