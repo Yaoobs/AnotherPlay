@@ -2,7 +2,9 @@ package com.yaoobs.anotherplay.presenter;
 
 
 import com.yaoobs.anotherplay.bean.AppInfo;
+import com.yaoobs.anotherplay.bean.BaseBean;
 import com.yaoobs.anotherplay.bean.PageBean;
+import com.yaoobs.anotherplay.common.rx.RxHttpReponseCompat;
 import com.yaoobs.anotherplay.data.RecommendModel;
 import com.yaoobs.anotherplay.di.module.RecommendModule;
 import com.yaoobs.anotherplay.presenter.contract.RecommendContract;
@@ -29,8 +31,9 @@ public class RecommendPresenter extends BasePresenter<RecommendModel, RecommendC
     public void requestDatas() {
 
         mModel.getApps()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxHttpReponseCompat.<PageBean<AppInfo>>compatResult())
                 .subscribe(new Subscriber<PageBean<AppInfo>>() {
 
             @Override
