@@ -2,6 +2,7 @@ package com.yaoobs.anotherplay.data;
 
 
 import com.yaoobs.anotherplay.bean.AppInfo;
+import com.yaoobs.anotherplay.bean.BaseBean;
 import com.yaoobs.anotherplay.bean.PageBean;
 import com.yaoobs.anotherplay.data.http.ApiService;
 
@@ -17,7 +18,7 @@ public class RecommendModel {
         this.mApiService = apiService;
     }
 
-    public Observable<PageBean<AppInfo>> getApps(){
+    public Observable<BaseBean<PageBean<AppInfo>>> getApps(){
 //        HttpManager manager = new HttpManager();
 //
 //        ApiService apiService = manager.getRetrofit(manager.getOkHttpClient()).create(ApiService.class);

@@ -1,5 +1,8 @@
 package com.yaoobs.anotherplay.di.module;
 
+import android.app.Application;
+
+import com.yaoobs.anotherplay.common.rx.RxErrorHandler;
 import com.yaoobs.anotherplay.data.http.ApiService;
 
 import java.util.concurrent.TimeUnit;
@@ -70,6 +73,12 @@ public class HttpModule {
     @Singleton
     public ApiService provideApiService(Retrofit retrofit){
         return retrofit.create(ApiService.class);
+    }
+
+    @Provides
+    @Singleton
+    public RxErrorHandler provideErrorHandlder(Application application){
+        return new RxErrorHandler(application);
     }
 
 }

@@ -2,6 +2,7 @@ package com.yaoobs.anotherplay.data.http;
 
 
 import com.yaoobs.anotherplay.bean.AppInfo;
+import com.yaoobs.anotherplay.bean.BaseBean;
 import com.yaoobs.anotherplay.bean.PageBean;
 
 import retrofit2.Call;
@@ -21,5 +22,5 @@ public interface ApiService {
 //    public Call<PageBean<AppInfo>> getApps(@Query("p") String jsonParam);
 
     @GET("featured")
-    public Observable<PageBean<AppInfo>> getApps(@Query("p") String jsonParam);
+    public Observable<BaseBean<PageBean<AppInfo>>> getApps(@Query("p") String jsonParam);
 }
