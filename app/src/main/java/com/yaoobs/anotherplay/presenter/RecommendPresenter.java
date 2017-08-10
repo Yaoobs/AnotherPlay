@@ -1,12 +1,16 @@
 package com.yaoobs.anotherplay.presenter;
 
 
+import android.app.Activity;
+import android.support.v4.app.Fragment;
+
 import com.yaoobs.anotherplay.bean.AppInfo;
 import com.yaoobs.anotherplay.bean.BaseBean;
 import com.yaoobs.anotherplay.bean.PageBean;
 import com.yaoobs.anotherplay.common.rx.RxErrorHandler;
 import com.yaoobs.anotherplay.common.rx.RxHttpReponseCompat;
 import com.yaoobs.anotherplay.common.rx.subscriber.ErrorHandlerSubscriber;
+import com.yaoobs.anotherplay.common.rx.subscriber.ProgressDialogSubcriber;
 import com.yaoobs.anotherplay.data.RecommendModel;
 import com.yaoobs.anotherplay.di.module.RecommendModule;
 import com.yaoobs.anotherplay.presenter.contract.RecommendContract;
@@ -25,39 +29,23 @@ import rx.schedulers.Schedulers;
 
 public class RecommendPresenter extends BasePresenter<RecommendModel, RecommendContract.View> {
 
-    private RxErrorHandler mRxErrorHandler;
+    private RxErrorHandler mErrorHandler;
 
     @Inject
     public RecommendPresenter(RecommendModel recommendModel, RecommendContract.View view, RxErrorHandler errorHandler) {
         super(recommendModel, view);
-        this.mRxErrorHandler = errorHandler;
+        this.mErrorHandler = errorHandler;
     }
 
     public void requestDatas() {
 
+
         mModel.getApps()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
                 .compose(RxHttpReponseCompat.<PageBean<AppInfo>>compatResult())
-                .subscribe(new ErrorHandlerSubscriber<PageBean<AppInfo>>(mRxErrorHandler) {
-
-                    @Override
-                    public void onStart() {
-                        mView.shwLoading();
-                    }
-
-                    @Override
-                    public void onCompleted() {
-                        mView.dismissLoading();
-                    }
-
+                .subscribe(new ProgressDialogSubcriber<PageBean<AppInfo>>(mView,mErrorHandler) {
                     @Override
                     public void onNext(PageBean<AppInfo> appInfoPageBean) {
-                        if (appInfoPageBean != null) {
-                            mView.showResult(appInfoPageBean.getDatas());
-                        } else {
-                            mView.showNodata();
-                        }
+                        mView.showResult(appInfoPageBean.getDatas());
                     }
                 });
 //        mView.shwLoading();

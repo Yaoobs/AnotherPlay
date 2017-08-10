@@ -6,13 +6,13 @@ import android.util.Log;
 import com.yaoobs.anotherplay.common.exception.BaseException;
 import com.yaoobs.anotherplay.common.rx.RxErrorHandler;
 
-public abstract  class ErrorHandlerSubscriber<T> extends DefualtSubscriber<T> {
+public abstract class ErrorHandlerSubscriber<T> extends DefualtSubscriber<T> {
 
-    protected RxErrorHandler mErrorHandler;
+    protected RxErrorHandler mRxErrorHandler;
 
-    public ErrorHandlerSubscriber(RxErrorHandler errorHandler){
+    public ErrorHandlerSubscriber(RxErrorHandler errorHandler) {
 
-      this.mErrorHandler = errorHandler;
+        this.mRxErrorHandler = errorHandler;
 
     }
 
@@ -20,15 +20,10 @@ public abstract  class ErrorHandlerSubscriber<T> extends DefualtSubscriber<T> {
     @Override
     public void onError(Throwable e) {
 
-        BaseException baseException =  mErrorHandler.handleError(e);
+        e.printStackTrace();
 
-        if(baseException==null){
-            e.printStackTrace();
-            Log.d("ErrorHandlerSubscriber",e.getMessage());
-        }
-        else {
-            mErrorHandler.showErrorMessage(baseException);
-        }
+        BaseException baseException = mRxErrorHandler.handleError(e);
+        mRxErrorHandler.showErrorMessage(baseException);
 
     }
 

@@ -21,6 +21,6 @@ public interface ApiService {
 //    @GET("featured")
 //    public Call<PageBean<AppInfo>> getApps(@Query("p") String jsonParam);
 
-    @GET("featured")
+    @GET("featured2")
     public Observable<BaseBean<PageBean<AppInfo>>> getApps(@Query("p") String jsonParam);
 }

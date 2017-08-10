@@ -1,5 +1,6 @@
 package com.yaoobs.anotherplay.ui.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,13 +11,14 @@ import android.view.ViewGroup;
 import com.yaoobs.anotherplay.AppApplication;
 import com.yaoobs.anotherplay.di.component.AppComponent;
 import com.yaoobs.anotherplay.presenter.BasePresenter;
+import com.yaoobs.anotherplay.ui.BaseView;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public  abstract  class BaseFragment<T extends BasePresenter> extends Fragment {
+public  abstract  class BaseFragment<T extends BasePresenter> extends Fragment implements BaseView{
 
 
 
@@ -29,6 +31,7 @@ public  abstract  class BaseFragment<T extends BasePresenter> extends Fragment {
 
     @Inject
     T mPresenter ;
+    private ProgressDialog mProgressDialog;
 
 
     @Nullable
@@ -72,6 +75,19 @@ public  abstract  class BaseFragment<T extends BasePresenter> extends Fragment {
 
     public abstract void  init();
 
+    @Override
+    public void showLoading() {
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage("loading.....");
 
+        mProgressDialog.show();
+    }
+
+    @Override
+    public void dismissLoading() {
+        if ( mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
 
 }

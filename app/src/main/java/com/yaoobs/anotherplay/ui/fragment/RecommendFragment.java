@@ -75,17 +75,17 @@ public class RecommendFragment extends BaseFragment<RecommendPresenter> implemen
 
     }
 
-    @Override
-    public void shwLoading() {
-        mProgressDialog.show();
-    }
-
-    @Override
-    public void dismissLoading() {
-        if (mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
-    }
+//    @Override
+//    public void showLoading() {
+//        mProgressDialog.show();
+//    }
+//
+//    @Override
+//    public void dismissLoading() {
+//        if (mProgressDialog.isShowing()) {
+//            mProgressDialog.dismiss();
+//        }
+//    }
 
     @Override
     public void showResult(List<AppInfo> datas) {

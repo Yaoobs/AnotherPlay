@@ -5,7 +5,6 @@ package com.yaoobs.anotherplay.ui;
  */
 
 public interface BaseView {
-
-    void shwLoading();
+    void showLoading();
     void dismissLoading();
 }
