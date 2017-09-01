@@ -8,11 +8,15 @@ import com.yaoobs.anotherplay.common.rx.RxErrorHandler;
 
 public abstract class ErrorHandlerSubscriber<T> extends DefualtSubscriber<T> {
 
-    protected RxErrorHandler mRxErrorHandler;
+    protected RxErrorHandler mErrorHandler = null;
 
-    public ErrorHandlerSubscriber(RxErrorHandler errorHandler) {
+    protected Context mContext;
 
-        this.mRxErrorHandler = errorHandler;
+    public ErrorHandlerSubscriber(Context context) {
+
+        this.mContext = context;
+
+        this.mErrorHandler = new RxErrorHandler(mContext);
 
     }
 
@@ -20,10 +24,15 @@ public abstract class ErrorHandlerSubscriber<T> extends DefualtSubscriber<T> {
     @Override
     public void onError(Throwable e) {
 
-        e.printStackTrace();
+        BaseException baseException =  mErrorHandler.handleError(e);
 
-        BaseException baseException = mRxErrorHandler.handleError(e);
-        mRxErrorHandler.showErrorMessage(baseException);
+        if(baseException==null){
+            e.printStackTrace();
+            Log.d("ErrorHandlerSubscriber",e.getMessage());
+        }
+        else {
+            mErrorHandler.showErrorMessage(baseException);
+        }
 
     }
 

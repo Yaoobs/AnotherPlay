@@ -1,63 +1,44 @@
 package com.yaoobs.anotherplay.common.rx.subscriber;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-
-import com.yaoobs.anotherplay.bean.BaseBean;
-import com.yaoobs.anotherplay.common.rx.RxErrorHandler;
 import com.yaoobs.anotherplay.common.util.ProgressDialogHandler;
-import com.yaoobs.anotherplay.ui.BaseView;
 
-public abstract class ProgressDialogSubcriber<T> extends ErrorHandlerSubscriber<T> {
+public abstract class ProgressDialogSubcriber<T> extends ErrorHandlerSubscriber<T> implements ProgressDialogHandler.OnProgressCancelListener{
+    private ProgressDialogHandler mProgressDialogHandler;
 
-    private ProgressDialog mProgressDialog;
-    private BaseView mBaseView;
-
-    public ProgressDialogSubcriber(BaseView baseView, RxErrorHandler rxErrorHandler) {
-        super(rxErrorHandler);
-        this.mBaseView = baseView;
+    public ProgressDialogSubcriber(Context context) {
+        super(context);
+        mProgressDialogHandler = new ProgressDialogHandler(mContext,true,this);
     }
 
-    protected boolean isShowDialog() {
+    protected boolean isShowProgressDialog() {
         return true;
     }
 
     @Override
-    public void onStart() {
-            showProgressDialog();
+    public void onCancelProgress() {
+        unsubscribe();
+    }
 
+    @Override
+    public void onStart() {
+        if (isShowProgressDialog())
+            this.mProgressDialogHandler.showProgressDialog();
     }
 
     @Override
     public void onCompleted() {
-            dismissProgressDialog();
+        if(isShowProgressDialog()){
+            this.mProgressDialogHandler.dismissProgressDialog();
+        }
     }
 
     @Override
     public void onError(Throwable e) {
         super.onError(e);
-        dismissProgressDialog();
-    }
-
-    private void initProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(mContext);
-            mProgressDialog.setMessage("loading.....");
+        if(isShowProgressDialog()){
+            this.mProgressDialogHandler.dismissProgressDialog();
         }
-
-    }
-
-    private void showProgressDialog() {
-//        initProgressDialog();
-//        mProgressDialog.show();
-        mBaseView.showLoading();
-    }
-
-    private void dismissProgressDialog() {
-//        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-//            mProgressDialog.dismiss();
-//        }
-        mBaseView.dismissLoading();
     }
 
 }

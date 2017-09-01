@@ -13,7 +13,7 @@ public class BasePresenter <M,V extends BaseView>{
 
     protected V mView;
 
-    private Context mContext;
+    protected Context mContext;
 
     public BasePresenter(M m,V v){
 
