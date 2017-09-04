@@ -9,6 +9,7 @@ import com.yaoobs.anotherplay.bean.PageBean;
 import com.yaoobs.anotherplay.common.rx.RxErrorHandler;
 import com.yaoobs.anotherplay.common.rx.RxHttpReponseCompat;
 import com.yaoobs.anotherplay.common.rx.subscriber.ProgressDialogSubcriber;
+import com.yaoobs.anotherplay.common.rx.subscriber.ProgressSubcriber;
 import com.yaoobs.anotherplay.data.RecommendModel;
 import com.yaoobs.anotherplay.presenter.contract.RecommendContract;
 
@@ -25,7 +26,7 @@ public class RecommendPresenter extends BasePresenter<RecommendModel, RecommendC
 
         mModel.getApps()
                 .compose(RxHttpReponseCompat.<PageBean<AppInfo>>compatResult())
-                .subscribe(new ProgressDialogSubcriber<PageBean<AppInfo>>(mContext) {
+                .subscribe(new ProgressSubcriber<PageBean<AppInfo>>(mContext,mView) {
                     @Override
                     public void onNext(PageBean<AppInfo> appInfoPageBean) {
                         mView.showResult(appInfoPageBean.getDatas());

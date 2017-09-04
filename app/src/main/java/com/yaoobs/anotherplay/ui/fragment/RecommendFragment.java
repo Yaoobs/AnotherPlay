@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-public class RecommendFragment extends BaseFragment<RecommendPresenter> implements RecommendContract.View {
+public class RecommendFragment extends ProgressFragment<RecommendPresenter>  implements RecommendContract.View {
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -57,6 +57,11 @@ public class RecommendFragment extends BaseFragment<RecommendPresenter> implemen
         mPresenter.requestDatas();
     }
 
+    @Override
+    public void onEmptyViewClick() {
+        mPresenter.requestDatas();
+    }
+
     private void initRecyclerView(List<AppInfo> datas) {
 
         //为RecyclerView设置布局管理器
@@ -74,18 +79,6 @@ public class RecommendFragment extends BaseFragment<RecommendPresenter> implemen
 
 
     }
-
-//    @Override
-//    public void showLoading() {
-//        mProgressDialog.show();
-//    }
-//
-//    @Override
-//    public void dismissLoading() {
-//        if (mProgressDialog.isShowing()) {
-//            mProgressDialog.dismiss();
-//        }
-//    }
 
     @Override
     public void showResult(List<AppInfo> datas) {
