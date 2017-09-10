@@ -2,6 +2,7 @@ package com.yaoobs.anotherplay.di.module;
 
 import android.app.Application;
 
+import com.yaoobs.anotherplay.common.http.CommonParamsInterceptor;
 import com.yaoobs.anotherplay.common.rx.RxErrorHandler;
 import com.yaoobs.anotherplay.data.http.ApiService;
 
@@ -43,6 +44,7 @@ public class HttpModule {
                 // HeadInterceptor实现了Interceptor，用来往Request Header添加一些业务相关数据，如APP版本，token信息
 //                .addInterceptor(new HeadInterceptor())
                 .addInterceptor(logging)
+//                .addInterceptor(new CommonParamsInterceptor())
                 // 连接超时时间设置
                 .connectTimeout(10, TimeUnit.SECONDS)
                 // 读取超时时间设置
