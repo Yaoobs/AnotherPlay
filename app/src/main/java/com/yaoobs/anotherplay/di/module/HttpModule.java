@@ -2,6 +2,8 @@ package com.yaoobs.anotherplay.di.module;
 
 import android.app.Application;
 
+import com.google.gson.Gson;
+import com.yaoobs.anotherplay.BuildConfig;
 import com.yaoobs.anotherplay.common.http.CommonParamsInterceptor;
 import com.yaoobs.anotherplay.common.rx.RxErrorHandler;
 import com.yaoobs.anotherplay.data.http.ApiService;
@@ -27,24 +29,30 @@ public class HttpModule {
 
     @Provides
     @Singleton
-    public OkHttpClient getOkHttpClient(){
+    public OkHttpClient provideOkHttpClient(Application application, Gson gson){
 
 
 
-        // log用拦截器
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-        // 开发模式记录整个body，否则只记录基本信息如返回200，http协议版本等
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        if(BuildConfig.DEBUG){
+            // log用拦截器
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+
+            // 开发模式记录整个body，否则只记录基本信息如返回200，http协议版本等
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            builder.addInterceptor(logging);
+
+        }
 
         // 如果使用到HTTPS，我们需要创建SSLSocketFactory，并设置到client
 //        SSLSocketFactory sslSocketFactory = null;
 
-        return new OkHttpClient.Builder()
-                // HeadInterceptor实现了Interceptor，用来往Request Header添加一些业务相关数据，如APP版本，token信息
-//                .addInterceptor(new HeadInterceptor())
-                .addInterceptor(logging)
-//                .addInterceptor(new CommonParamsInterceptor())
+        return builder
+                .addInterceptor(new CommonParamsInterceptor(application,gson))
+
                 // 连接超时时间设置
                 .connectTimeout(10, TimeUnit.SECONDS)
                 // 读取超时时间设置
