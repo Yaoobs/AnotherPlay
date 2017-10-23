@@ -55,6 +55,7 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter>  imp
     @Override
     public void init() {
         mPresenter.requestDatas();
+//        mPresenter.requestPermission();
     }
 
     @Override
@@ -93,5 +94,15 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter>  imp
     @Override
     public void showError(String msg) {
         Toast.makeText(getActivity(), "服务器开小差了：" + msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissonSuccess() {
+        mPresenter.requestDatas();
+    }
+
+    @Override
+    public void onRequestPermissonError() {
+        Toast.makeText(getActivity(),"你已拒绝授权",Toast.LENGTH_LONG).show();
     }
 }

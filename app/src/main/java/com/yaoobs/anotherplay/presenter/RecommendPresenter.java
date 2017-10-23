@@ -1,9 +1,11 @@
 package com.yaoobs.anotherplay.presenter;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 
+import com.tbruyelle.rxpermissions.RxPermissions;
 import com.yaoobs.anotherplay.bean.AppInfo;
 import com.yaoobs.anotherplay.bean.PageBean;
 import com.yaoobs.anotherplay.common.rx.RxErrorHandler;
@@ -15,6 +17,10 @@ import com.yaoobs.anotherplay.presenter.contract.RecommendContract;
 
 import javax.inject.Inject;
 
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
+
 public class RecommendPresenter extends BasePresenter<RecommendModel, RecommendContract.View> {
 
     @Inject
@@ -22,16 +28,58 @@ public class RecommendPresenter extends BasePresenter<RecommendModel, RecommendC
         super(recommendModel, view);
     }
 
-    public void requestDatas() {
+//    public void requestPermission(){
+//        RxPermissions rxPermissions = new RxPermissions((Activity) mContext);
+//
+//        rxPermissions.request(Manifest.permission.READ_PHONE_STATE).subscribe(new Action1<Boolean>() {
+//            @Override
+//            public void call(Boolean aBoolean) {
+//                if(aBoolean){
+//
+//                    mView.onRequestPermissonSuccess();
+//                }
+//                else{
+//
+//                    mView.onRequestPermissonError();
+//                }
+//            }
+//        });
+//
+//    }
 
-        mModel.getApps()
-                .compose(RxHttpReponseCompat.<PageBean<AppInfo>>compatResult())
+    public void requestDatas() {
+        RxPermissions rxPermissions = new RxPermissions((Activity) mContext);
+        rxPermissions.request(Manifest.permission.READ_PHONE_STATE)
+                .flatMap(new Func1<Boolean, Observable<PageBean<AppInfo>>>() {
+                    @Override
+                    public Observable<PageBean<AppInfo>>call(Boolean aBoolean) {
+
+                        if(aBoolean){
+
+                            return  mModel.getApps().compose(RxHttpReponseCompat.<PageBean<AppInfo>>compatResult());
+                        }
+                        else{
+
+                            return Observable.empty();
+                        }
+
+
+                    }
+                })
                 .subscribe(new ProgressSubcriber<PageBean<AppInfo>>(mContext,mView) {
                     @Override
                     public void onNext(PageBean<AppInfo> appInfoPageBean) {
                         mView.showResult(appInfoPageBean.getDatas());
                     }
                 });
+//        mModel.getApps()
+//                .compose(RxHttpReponseCompat.<PageBean<AppInfo>>compatResult())
+//                .subscribe(new ProgressSubcriber<PageBean<AppInfo>>(mContext,mView) {
+//                    @Override
+//                    public void onNext(PageBean<AppInfo> appInfoPageBean) {
+//                        mView.showResult(appInfoPageBean.getDatas());
+//                    }
+//                });
 //        mView.shwLoading();
 
 //        mModel.getApps(new Callback<PageBean<AppInfo>>() {
