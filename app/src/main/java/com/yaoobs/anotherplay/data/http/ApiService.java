@@ -3,6 +3,7 @@ package com.yaoobs.anotherplay.data.http;
 
 import com.yaoobs.anotherplay.bean.AppInfo;
 import com.yaoobs.anotherplay.bean.BaseBean;
+import com.yaoobs.anotherplay.bean.IndexBean;
 import com.yaoobs.anotherplay.bean.PageBean;
 import com.yaoobs.anotherplay.bean.requestbean.LoginRequestBean;
 
@@ -28,7 +29,7 @@ public interface ApiService {
     public Observable<BaseBean<PageBean<AppInfo>>> getApps(@Query("p") String jsonParam);
 
     @GET("index")
-    public Observable<BaseBean<AppInfo>> index();
+    public Observable<BaseBean<IndexBean>> index();
 
     @GET("toplist")
     public Observable<BaseBean<AppInfo>> topList(@Query("page") int page); //p={"page":0}

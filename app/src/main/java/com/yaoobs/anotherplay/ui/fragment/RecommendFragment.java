@@ -11,11 +11,13 @@ import android.widget.Toast;
 import com.yaoobs.anotherplay.R;
 import com.yaoobs.anotherplay.bean.AppInfo;
 
+import com.yaoobs.anotherplay.bean.IndexBean;
 import com.yaoobs.anotherplay.di.component.AppComponent;
 import com.yaoobs.anotherplay.di.component.DaggerRecommendComponent;
 import com.yaoobs.anotherplay.di.module.RecommendModule;
 import com.yaoobs.anotherplay.presenter.RecommendPresenter;
 import com.yaoobs.anotherplay.presenter.contract.RecommendContract;
+import com.yaoobs.anotherplay.ui.adapter.IndexMultipleAdapter;
 import com.yaoobs.anotherplay.ui.adapter.RecommendAppAdatper;
 import com.yaoobs.anotherplay.ui.decoration.DividerItemDecoration;
 
@@ -29,7 +31,7 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter>  imp
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
-    private RecommendAppAdatper mAdatper;
+    private IndexMultipleAdapter mAdatper;
 
     @Inject
     ProgressDialog mProgressDialog;
@@ -54,6 +56,7 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter>  imp
 
     @Override
     public void init() {
+        initRecyclerView();
         mPresenter.requestDatas();
 //        mPresenter.requestPermission();
     }
@@ -63,37 +66,33 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter>  imp
         mPresenter.requestDatas();
     }
 
-    private void initRecyclerView(List<AppInfo> datas) {
+    private void initRecyclerView() {
 
         //为RecyclerView设置布局管理器
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        //为RecyclerView设置分割线(这个可以对DividerItemDecoration进行修改，自定义)
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.HORIZONTAL_LIST));
+//
+//        //为RecyclerView设置分割线(这个可以对DividerItemDecoration进行修改，自定义)
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.HORIZONTAL_LIST));
 
         //动画
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdatper = new RecommendAppAdatper(getActivity(), datas);
 
-        mRecyclerView.setAdapter(mAdatper);
-
-
-    }
-
-    @Override
-    public void showResult(List<AppInfo> datas) {
-        initRecyclerView(datas);
-    }
-
-    @Override
-    public void showNodata() {
-        Toast.makeText(getActivity(), "暂时无数据，请吃完饭再来", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showError(String msg) {
         Toast.makeText(getActivity(), "服务器开小差了：" + msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showResult(IndexBean indexBean) {
+
+        mAdatper = new IndexMultipleAdapter(getActivity());
+        mAdatper.setData(indexBean);
+
+        mRecyclerView.setAdapter(mAdatper);
+
     }
 
     @Override
